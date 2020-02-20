@@ -13,9 +13,9 @@ import PlotPrtf
     
 def load_arguments(**kwargs):
     parser = argparse.ArgumentParser()
-    parser.add_argument("-pu","--fichier_univers", help="Chemin vers le fichier des historiques de l'univers", type=str, default=r'C:\Users\alexi\Dropbox\Informatique\Blockchain\Projet Smart Funds\Programmation\SmartFund\selection\test\data\Histo_Univers.csv')
-    parser.add_argument("-pc","--fichier_cours", help="Chemin vers le fichier des historiques de cours", type=str, default=r'C:\Users\alexi\Dropbox\Informatique\Blockchain\Projet Smart Funds\Programmation\SmartFund\selection\test\data\Histo_Cours.csv')
-    parser.add_argument("-pb", "--fichier_bench", help="Chemin vers le fichier de l'historiqe du benchmark", type=str, default=r'C:\Users\alexi\Dropbox\Informatique\Blockchain\Projet Smart Funds\Programmation\SmartFund\selection\test\data\Histo_Bench.csv')
+    parser.add_argument("-pu","--fichier_univers", help="Chemin vers le fichier des historiques de l'univers", type=str, default=r'.\data\Histo_Univers.csv')
+    parser.add_argument("-pc","--fichier_cours", help="Chemin vers le fichier des historiques de cours", type=str, default=r'.\data\Histo_Cours.csv')
+    parser.add_argument("-pb", "--fichier_bench", help="Chemin vers le fichier de l'historiqe du benchmark", type=str, default=r'.\data\Histo_Bench.csv')
     parser.add_argument("-dd", "--date_debut", help="Date de début des calculs", type=str, default='01/12/2019')
     parser.add_argument("-df", "--date_fin", help="Date de fin des calculs", type=str, default='01/01/2020')
     parser.add_argument("-tper", "--type_periode_calc", help="Type de période pour les calculs", type=str, choices=['days','months','years'], default='months')

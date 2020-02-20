@@ -24,7 +24,16 @@ def load_arguments(**kwargs):
     for key, value in kwargs.items():
         for action in parser._actions:
             if action.dest == key:
-                action.choices == value
+                if action.dest == 'type_pas':
+                    if value == 'months':
+                        value = 'MONTHLY'
+                    elif value == 'days':
+                        value = 'DAILY'
+                    elif value == 'years':
+                        value = 'YEARLY'
+                        
+                action.choices = value
+                action.default = value
                 
     return parser
     
@@ -35,10 +44,10 @@ def Calc_Perf(**kwargs):
         
     dfCours = pd.read_csv(args.fichier_cours,header=[0], sep=';',index_col=0, parse_dates=True)
     dfBench = pd.read_csv(args.fichier_bench, header=[0], sep=';',index_col=0, parse_dates=True)
-    if kwargs.get('Portefeuilles',None) == None:
+    
+    dfPrtfs = kwargs.get('Portefeuilles',pd.DataFrame())
+    if dfPrtfs.empty:
         dfPrtfs = pd.read_csv(args.fichier_prtfs,header=[0], sep=';', parse_dates=['DATE_PRTF'])
-    else:
-        dfPrtfs = kwargs.get('Portefeuilles',None)
     
     #récupère l'ensemble des dates des portefeuilles
     dfPrtfs.sort_values(by=['DATE_PRTF'],ascending=True, inplace=True)

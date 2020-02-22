@@ -6,7 +6,9 @@ import pandas as pd
 from multiprocessing import Pool, freeze_support
 import copy
 
-
+fieldnames = ['fichier_univers', 'fichier_cours', 'fichier_bench','date_debut', 'date_fin',
+               'type_periode_calc','periodicite', 'type_pas', 'nb_pas', 'nb_titres',
+               'nb_titres_turnover', 'prct_na', 'write_prtf', 'Perf_PRTF', 'Perf_Bench']
 
 def CallBack(rslt):
     print(rslt[0])
@@ -47,9 +49,6 @@ def test(num):
 if __name__ == '__main__':
     start_time = time.time()
 
-    fieldnames = ['fichier_univers', 'fichier_cours', 'fichier_bench','date_debut', 'date_fin',
-                   'type_periode_calc','periodicite', 'type_pas', 'nb_pas', 'nb_titres',
-                   'nb_titres_turnover', 'prct_na', 'write_prtf', 'Perf_PRTF', 'Perf_Bench']
     #dfResults = pd.DataFrame(columns=fieldnames)
     #freeze_support()
     pool = Pool()
@@ -64,15 +63,15 @@ if __name__ == '__main__':
     j = 6
     #k = 5
     #for k in np.arange(3,11,1):
-    for k in [3,40]:
+    for k in [5,40]:
         d_args = dict()
+        d_args['write_prtf'] = False
         d_args['nb_pas'] = i
         d_args['periodicite'] = j
         d_args['nb_titres_turnover']=k
 
         list_dict.append(d_args)
     
-    #list_selec = [Selection.Selection(**i_args) for i_args in list_dict]
     result = pool.map_async(BackTest,list_dict, error_callback=callback_error)
     result.wait()
     

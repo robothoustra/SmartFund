@@ -9,7 +9,17 @@ import Model_Calcs
 import csv
 import time
 import PlotPrtf
+import os
 
+class readable_dir(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        prospective_dir=values
+        if not os.path.isdir(prospective_dir):
+            raise argparse.ArgumentTypeError("readable_dir:{0} is not a valid path".format(prospective_dir))
+        if os.access(prospective_dir, os.R_OK):
+            setattr(namespace,self.dest,prospective_dir)
+        else:
+            raise argparse.ArgumentTypeError("readable_dir:{0} is not a readable dir".format(prospective_dir))
 
 def load_arguments(**kwargs):
     parser = argparse.ArgumentParser()
@@ -25,8 +35,9 @@ def load_arguments(**kwargs):
     parser.add_argument("-nb", "--nb_titres", help="Nombre de titres dans le portefeuille", type=int, default=50)
     parser.add_argument("-nbt", "--nb_titres_turnover", help="Nombre de titres à changer chaque mois", type=int, default=5)
     parser.add_argument("-pna", "--prct_na", help="Pourcentage max de N/A dans l'historique", type=float, default=0.25)
-    parser.add_argument("-wp", "--write_prtf", help="Écrit le(s) portefeuille(s) dans un fichier de sortie", action="store_true", default=False)
-
+    parser.add_argument("-wp", "--write_prtf", help="Écrit le(s) portefeuille(s) dans un fichier de sortie", type=bool, default=True)
+    parser.add_argument("-po", "--path_output", help="Chemin des fichiers de sortie", action=readable_dir, default='./ouput/')
+    
     for key, value in kwargs.items():
         for action in parser._actions:
             if action.dest == key:
@@ -56,8 +67,12 @@ class Selection:
         strCsvPrtf = 'prtfs.csv'
             
         args = self.args
-            
-        with open(r'.\output\csvRmks.csv','w', newline='') as csvRmks:
+        
+        strRmk = os.path.join(args.path_output.strip(), 'csvRmks.csv')
+        #print(os.path.dirname(os.path.realpath(__file__)))
+        print(os.path.abspath(args.path_output))
+        print(os.path.isdir(os.path.abspath(args.path_output)))
+        with open('csvRmks.csv','w', newline='') as csvRmks:
             fstPrtf = True
             csvRmkswriter = csv.writer(csvRmks, delimiter=';')
             csvRmkswriter.writerow(['DATE_CALC', 'TICKER','REMARQUE'])
@@ -106,10 +121,10 @@ class Selection:
             #Écrit les résultats dans un csv
             if args.write_prtf:
                 if fstPrtf:
-                    dfPrtf.to_csv(strCsvPrtf, mode='w',header=True, sep=';', float_format='%.15f')
+                    dfPrtf.to_csv(args.path_output.strip() + strCsvPrtf, mode='w',header=True, sep=';', float_format='%.15f')
                     fstPrtf=False
                 else:
-                    dfPrtf.to_csv(strCsvPrtf, mode='a',header=False, sep=';', float_format='%.15f')
+                    dfPrtf.to_csv(args.path_output.strip() + strCsvPrtf, mode='a',header=False, sep=';', float_format='%.15f')
         
         return dfPrtf
 

@@ -10,7 +10,7 @@ import csv
 import time
 import PlotPrtf
 
-    
+
 def load_arguments(**kwargs):
     parser = argparse.ArgumentParser()
     parser.add_argument("-pu","--fichier_univers", help="Chemin vers le fichier des historiques de l'univers", type=str, default=r'.\data\Histo_Univers.csv')
@@ -57,7 +57,7 @@ class Selection:
             
         args = self.args
             
-        with open('csvRmks.csv','w', newline='') as csvRmks:
+        with open(r'.\output\csvRmks.csv','w', newline='') as csvRmks:
             fstPrtf = True
             csvRmkswriter = csv.writer(csvRmks, delimiter=';')
             csvRmkswriter.writerow(['DATE_CALC', 'TICKER','REMARQUE'])

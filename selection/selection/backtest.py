@@ -3,16 +3,14 @@ import PlotPrtf
 import time
 import numpy as np
 import pandas as pd
-from multiprocessing import Pool, freeze_support, Process
+from multiprocessing import Pool, freeze_support
 import copy
 
-fieldnames = ['fichier_univers', 'fichier_cours', 'fichier_bench','date_debut', 'date_fin',
-               'type_periode_calc','periodicite', 'type_pas', 'nb_pas', 'nb_titres',
-               'nb_titres_turnover', 'prct_na', 'write_prtf', 'Perf_PRTF', 'Perf_Bench']
-dfResults = pd.DataFrame(columns=fieldnames)
+
 
 def CallBack(rslt):
-    dfResults.append(rslt)
+    print(rslt[0])
+    dfResults = dfResults.append(rslt[0])
     print('Callback')
 
 def callback_error(result):
@@ -20,7 +18,7 @@ def callback_error(result):
     
 def BackTest(args):
     print(args)
-    selection = Selection.Selection(**d_args)
+    selection = Selection.Selection(**args)
     dfPrtf = selection.Get_PRTF()
     args_select = selection.GetArgs()
     
@@ -48,7 +46,11 @@ def test(num):
     
 if __name__ == '__main__':
     start_time = time.time()
-    dfResults = None
+
+    fieldnames = ['fichier_univers', 'fichier_cours', 'fichier_bench','date_debut', 'date_fin',
+                   'type_periode_calc','periodicite', 'type_pas', 'nb_pas', 'nb_titres',
+                   'nb_titres_turnover', 'prct_na', 'write_prtf', 'Perf_PRTF', 'Perf_Bench']
+    #dfResults = pd.DataFrame(columns=fieldnames)
     #freeze_support()
     pool = Pool()
     
@@ -60,29 +62,21 @@ if __name__ == '__main__':
                 #nb_titre_turnover
     i = 1
     j = 6
-    k = 5
+    #k = 5
     #for k in np.arange(3,11,1):
-    d_args = dict()
-    d_args['nb_pas'] = i
-    d_args['periodicite'] = j
-    d_args['nb_titres_turnover']=k
+    for k in [3,40]:
+        d_args = dict()
+        d_args['nb_pas'] = i
+        d_args['periodicite'] = j
+        d_args['nb_titres_turnover']=k
 
-    list_dict.append(d_args)
-    print(list_dict)
-    pool.map(test,range(2))#, callback=CallBack, error_callback=callback_error)
-    #pool.close()
-    #pool.join()
-        
-    #args = (x for x in list_dict)
-    #pool.map_async(Main.Get_PRTF,[x for x in list_dict])
-    #pool.close()
-    #pool.join()
+        list_dict.append(d_args)
     
     #list_selec = [Selection.Selection(**i_args) for i_args in list_dict]
-    #pool.map(BackTest,list_dict)#, callback=CallBack, error_callback=callback_error)
-    #pool.close()
-    #pool.join()
-
+    result = pool.map_async(BackTest,list_dict, error_callback=callback_error)
+    result.wait()
+    
+    dfResults = pd.DataFrame(result.get(),columns=fieldnames)
     #GetResultatsCalcPerf(fieldnames,fields)
     #with open(args.output_file,'a+', newline='') as out_file:
     #    out_file_writer = csv.DictWriter(out_file, fieldnames=fieldnames, delimiter=';')

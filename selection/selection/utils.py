@@ -63,14 +63,15 @@ def CleanAndSortDF(df, *args, **kwargs):
     
     return dfClean
 
-def ApplyDataConstraint(df, seuilNA, dtCalc,csvRmkswriter):
+def ApplyDataConstraint(df, seuilNA, dtCalc,csvRmkswriter, **kwargs):
     
         #=============Suprime les colonnes ayant un trop grand nombre de 'NaN'======================
         toleranceNA = int(len(df)*seuilNA)
         newDF = df.dropna(axis=1, thresh=toleranceNA)
         only_na = df.columns[~df.columns.isin(newDF.columns)]
-        for ticker in only_na:
-            csvRmkswriter.writerow([datetime.strftime(dtCalc,'%d/%m/%Y'), ticker, 'Nombre de N/A sup au seuil (' + str((1-seuilNA)) + ')'])
+        if not csvRmkswriter is None:
+            for ticker in only_na:
+                csvRmkswriter.writerow([datetime.strftime(dtCalc,'%d/%m/%Y'), ticker, 'Nombre de N/A sup au seuil (' + str((1-seuilNA)) + ')'])
         #===========================================================================================
         
         #Lisse les données manquantes
@@ -79,18 +80,21 @@ def ApplyDataConstraint(df, seuilNA, dtCalc,csvRmkswriter):
 
         return newDF
     
-def RemoveZeroVariance(dfCours,dfVar,dtCalc,csvRmkswriter):
+def RemoveZeroVariance(dfCours,dfVar,dtCalc,csvRmkswriter, **kwargs):
         #Enlève toutes les columns de la matrice dfVar et dfCOurs ayant une variance de 0
         col_sup = []
         for i in dfVar:
             if var(dfVar[i]) == 0:
                 col_sup.append(i[0])
-                csvRmkswriter.writerow([dtCalc, i[0], 'Variance=0'])
+                if not csvRmkswriter is None:
+                    csvRmkswriter.writerow([dtCalc, i[0], 'Variance=0'])
+                 
         if (not len(col_sup)==0):
             dfVar.drop(col_sup, axis=1, level=0, inplace=True)
             dfCours.drop(col_sup, axis=1, level=0, inplace=True)
-            for ticker in col_sup:
-                csvRmkswriter.writerow([datetime.strftime(dtCalc,'%d/%m/%Y'), ticker, 'variance égale à zero'])
+            if not csvRmkswriter is None:
+                for ticker in col_sup:
+                    csvRmkswriter.writerow([datetime.strftime(dtCalc,'%d/%m/%Y'), ticker, 'variance égale à zero'])
 
 def GetLastPrtf(dfPrtfs,dfCours,dtCalc):
     """ Fonction renvoyant la matrice du dernier portefeuille connu avec les poids et cours """

@@ -112,7 +112,7 @@ def GetLastPrtf(dfPrtfs,dfCours,dtCalc):
     dfCoursDtCalc.reset_index(level=dfCoursDtCalc.columns[0], inplace=True)
     dfCoursDtCalc.drop(dfCoursDtCalc.columns[0], axis=1, inplace=True)
     
-    #Join le dataframe du portefeuille (matCalc) et celle des cours
+    #Joint le dataframe du portefeuille (matCalc) et celle des cours
     matCalc = pd.concat([dfPrtf,dfCoursDtCalc], axis=1)
     matCalc.rename(columns = {matCalc.columns[1] : 'COURS'}, inplace=True)
     

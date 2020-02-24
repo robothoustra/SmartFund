@@ -55,8 +55,10 @@ def GetNextPrtf(dfLastPrtf,nb_titres, nb_titres_turnover,dfData,csvRmkswriter,dt
         dfSelect = dfData.loc[dfLastPrtf.index]
         
         #Si le nombre de titre est inférieur, alors écrit une remarque
-        #if len(dfSelect) !=  len(dfLastPrtf):
-            #csvRmkswriter.writerow([datetime.strftime(dtCalc,'%d/%m/%Y'), '', str(len(dfLastPrtf)-len(dfSelect)) + ' Titres en prtf abs de l\'univ'])
+        
+        if len(dfSelect) !=  len(dfLastPrtf):
+            if not csvRmkswriter is None :
+                csvRmkswriter.writerow([datetime.strftime(dtCalc,'%d/%m/%Y'), '', str(len(dfLastPrtf)-len(dfSelect)) + ' Titres en prtf abs de l\'univ'])
         
 
         nbTitreAEnlever = max(len(dfSelect)-(nb_titres - nb_titres_turnover),0)
@@ -70,7 +72,8 @@ def GetNextPrtf(dfLastPrtf,nb_titres, nb_titres_turnover,dfData,csvRmkswriter,dt
         dfTitresPasEnPrtf = dfData[~dfData.index.isin(dfLastPrtf.index.values)]
         dfSelect = dfSelect.append(dfTitresPasEnPrtf.iloc[:nbTitreAAjouter])
         
-        #csvRmkswriter.writerow([datetime.strftime(dtCalc,'%d/%m/%Y'), '', str(nbTitreAAjouter) + ' Nouveau titres'])
+        if not csvRmkswriter is None:
+            csvRmkswriter.writerow([datetime.strftime(dtCalc,'%d/%m/%Y'), '', str(nbTitreAAjouter) + ' Nouveau titres'])
         
     if kwargs.get('rm_semivar',False):
         dfSelect.drop(['SEMI_VAR'], axis=1, inplace=True)

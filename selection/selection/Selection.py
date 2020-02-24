@@ -90,10 +90,12 @@ class Selection:
         fstPrtf = True
         dfPrtf = pd.DataFrame(columns=['TICKER','SEMI_VAR','POIDS','DATE_PRTF']).set_index('TICKER')
         
+        #Lecture des données
         dfUniv = pd.read_csv(args.fichier_univers,header=[0], sep=';', index_col=0, parse_dates=True)
         dfCours = pd.read_csv(args.fichier_cours,header=[0], sep=';',index_col=0, parse_dates=True)
         dfBench = pd.read_csv(args.fichier_bench, header=[0], sep=';',index_col=0, parse_dates=True)
         
+        #Nétoyage des dataframe
         dfUniv = utils.CleanAndSortDF(dfUniv,sortIndex=True, supRowNaIndex=True, supColNaIndex=True)
         dfCours = utils.CleanAndSortDF(dfCours,sortIndex=True, supRowNaIndex=True,supColNaIndex=True)
         dfBench = utils.CleanAndSortDF(dfBench,sortIndex=True, supRowNaIndex=True,supColNaIndex=True)
@@ -109,10 +111,11 @@ class Selection:
             if args.verbosity == True:
                 print('Composition du PRTF : {0}'.format(dates.dateInterCalc()))
                 
+            #Récupère les sous-dataframe concernant la période de calcul
             perUniv = utils.GetPerUnivers(dfUniv,dates.dateFinCalc())
             perCours = utils.CutBDD(dfCours,dates.dateDebPeriod(),dates.dateFinPeriod(),dfUniv=perUniv)
             perBench = utils.CutBDD(dfBench,dates.dateDebPeriod(),dates.dateFinPeriod())
-        
+
             if len(perCours) != len(perBench):
                 raise ValueError("nombre de lignes différent entre le vecteur du benchmark et la matrice des prix pour la date du {0:%d-%m-%Y}".format(dates.dateInterCalc()))
             

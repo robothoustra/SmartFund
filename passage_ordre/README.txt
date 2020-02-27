@@ -1,0 +1,8 @@
+-Le script doit crééer des ordres en fonction du portefeuille réel et du portefeuille cible.
+-La technique consiste à minimiser les écarts entre les poids réel et les poids cibles.
+-Possibilité de rajouter des contraintes (cash, expo ...)
+-Liste des contraintes :
+	-Colonnes à récupérer (ticker, quantité, prix, poids, dec (décimalisable))
+	-Titres décimalisables
+	-Arrondi sur les quantités
+- Gestion de la couverture

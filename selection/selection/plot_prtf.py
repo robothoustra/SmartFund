@@ -14,9 +14,9 @@ def load_arguments(**kwargs):
     parser.add_argument("-pc","--fichier_cours", help="Chemin vers le fichier des historiques de cours", type=str, default=r'./data/Histo_Cours.csv')
     parser.add_argument("-pb", "--fichier_bench", help="Chemin vers le fichier de l'historiqe du benchmark", type=str, default=r'./data/Histo_Bench.csv')
     parser.add_argument("-pp", "--fichier_prtfs", help="Chemin vers le fichier del'historique des portefeuilles", type=str, default=r'./output/prtfs.csv')
-    parser.add_argument("-dd", "--date_debut", help="Date de début du calcul des performances", type=str, default='01/01/2016')
-    parser.add_argument("-df", "--date_fin", help="Date de fin du calcul des performances", type=str, default='01/02/2020')
-    parser.add_argument("-tp", "--type_pas", help="Type de pas entre chaque calcul de perf", type=str, choices=['DAILY','WEEKLY','MONTHLY','YEARLY'], default='WEEKLY')
+    parser.add_argument("-dd", "--date_debut", help="Date de début du calcul des performances", type=str, default='01/01/2019')
+    parser.add_argument("-df", "--date_fin", help="Date de fin du calcul des performances", type=str, default='01/04/2019')
+    parser.add_argument("-tp", "--type_pas", help="Type de pas entre chaque calcul de perf", type=str, choices=['DAILY','WEEKLY','MONTHLY','YEARLY'], default='MONTHLY')
     parser.add_argument("-nl", "--nb_pas", help="Nombre de pas entre chaque calcul de perf", type=int, default=1)
     parser.add_argument("-b", "--base", help="Base du graphique", type=int, default=100)
     parser.add_argument("-g", "--graphique", help="Créé le graphique", action="store_true")
@@ -153,4 +153,4 @@ def Calc_Perf(**kwargs):
     return output    
             
 if __name__ == '__main__':
-    Calc_Perf()
+    print(Calc_Perf())

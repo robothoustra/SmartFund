@@ -81,7 +81,7 @@ class Selection:
         csvRmks = None
         csvRmkswriter = None
         
-        if not args.write_rmks==True:
+        if args.write_rmks==True:
             strRmk = os.path.join(args.path_output.strip(), 'csvRmks.csv')
             csvRmks = open(strRmk,'w', newline='')
             csvRmkswriter = csv.writer(csvRmks, delimiter=';')
@@ -145,6 +145,9 @@ class Selection:
             else:
                 dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='a',header=False, sep=';', float_format='%.15f')
         
+        if args.write_rmks == True:
+            csvRmks.close()
+            
         return dfPrtf
 
 if __name__ == '__main__':

@@ -45,6 +45,7 @@ def Calc_Perf(**kwargs):
     dfCours = pd.read_csv(args.fichier_cours,header=[0], sep=';',index_col=0, parse_dates=True)
     dfBench = pd.read_csv(args.fichier_bench, header=[0], sep=';',index_col=0, parse_dates=True)
     
+    #Si le portefeuille n'est pas passé en argument alors on le récupère dans le fichier csv 
     dfPrtfs = kwargs.get('Portefeuilles',pd.DataFrame())
     if dfPrtfs.empty:
         dfPrtfs = pd.read_csv(args.fichier_prtfs,header=[0], sep=';', parse_dates=['DATE_PRTF'])

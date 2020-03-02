@@ -1,7 +1,11 @@
 import argparse
 import pandas as pd
 import numpy as np
+import os
 
+# https://docs.scipy.org/doc/scipy/reference/optimize.html
+# https://docs.scipy.org/doc/scipy/reference/tutorial/optimize.html
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html
 class readable_dir(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         prospective_dir=values
@@ -14,8 +18,14 @@ class readable_dir(argparse.Action):
 
 def load_arguments(**kwargs):
     parser = argparse.ArgumentParser()
-    parser.add_argument("-ptf","--ptf_reel", help="Chemin vers le fichier contenant le dernier portefeuille",
-                        type=str, default='./data/Histo_Univers.csv')
+    parser.add_argument("-pr","--ptf_reel", help="Chemin vers le fichier contenant le dernier portefeuille",
+                        type=str, default='./data/ptfs réels.csv')
+    parser.add_argument("-pt","--ptf_th", help="Chemin vers le fichier contenant le portefeuille théorique",
+                        type=str, default='./output/ptfs.csv')
+    parser.add_argument("-ic","--inst_const", help="Chemin vers le fichier contenant la liste des instruments avec leur contraintes en colonne",
+                        type=str, default='./output/.csv')
+    parser.add_argument("-dt","--date", help="Date du portefeuille (utile pour récupérer les prtfs dans les fichiers)",
+                        type=str, default='./output/ptfs.csv')
 
     for key, value in kwargs.items():
         for action in parser._actions:
@@ -35,5 +45,9 @@ def GetOrders(**kwargs):
     
     #Lecture des données
     dfPtfReel = pd.read_csv(args.ptf_reel,header=[0], sep=';')
+    dfPtfTh = pd.read_csv(args.ptf_th, header=0, sep=';')
+    
+    
+    
     
     

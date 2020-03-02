@@ -1,0 +1,14 @@
+
+charger les fichiers modifiés :
+git add .
+
+commenter les fichiers :
+git commit -m "..."
+
+uploader les fichiers de la banche courante :
+git push
+
+fusionner la branche courante avec la master :
+#git fetch origin master => récupère les dernières modif de master
+#git merge master => fusionne la branche actuelle à partir de master
+git push origin develop:master => Met à jour la master à partir de develop.

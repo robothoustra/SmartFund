@@ -6,6 +6,7 @@ import os
 # https://docs.scipy.org/doc/scipy/reference/optimize.html
 # https://docs.scipy.org/doc/scipy/reference/tutorial/optimize.html
 # https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html
+
 class readable_dir(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         prospective_dir=values
@@ -23,7 +24,7 @@ def load_arguments(**kwargs):
     parser.add_argument("-pt","--ptf_th", help="Chemin vers le fichier contenant le portefeuille théorique",
                         type=str, default='./output/ptfs.csv')
     parser.add_argument("-ic","--inst_const", help="Chemin vers le fichier contenant la liste des instruments avec leur contraintes en colonne",
-                        type=str, default='./output/.csv')
+                        type=str, default='./output/contraintes.csv')
     parser.add_argument("-dt","--date", help="Date du portefeuille (utile pour récupérer les prtfs dans les fichiers)",
                         type=str, default='./output/ptfs.csv')
 

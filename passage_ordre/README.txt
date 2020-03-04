@@ -8,15 +8,19 @@
 - Gestion de la couverture
 
 Colonnes Portefeuille réel (ancien protefeuille) :
+	DATE_PRTF
 	TICKER
 	TYPE (ACTIONS, OBLIG ...)
 	QUANTITE	
 
 Colonnes Portefeuille théorique :
+	DATE_PRTF
 	TICKER
 	POIDS
 	PRIX (nouveaux)
-	
+
+NB : la date du portefeuille réel doit etre égale à celle du portefeuille théorique.
+
 Doit fournir un fichier de contrainte : 
 	col 1 = ticker
 	col 2 = prix (pour une quantité)

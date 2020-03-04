@@ -140,10 +140,10 @@ class Selection:
         #Écrit les résultats dans un csv
         if args.write_prtf:
             if fstPrtf:
-                dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='w',header=True, sep=';', float_format='%.15f')
+                dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='w',header=True, sep=';') #, float_format='%.15f')
                 fstPrtf=False
             else:
-                dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='a',header=False, sep=';', float_format='%.15f')
+                dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='a',header=False, sep=';') #, float_format='%.15f')
         
         if args.write_rmks == True:
             csvRmks.close()

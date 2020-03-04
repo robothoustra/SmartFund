@@ -41,14 +41,16 @@ def GetOrders(**kwargs):
     parser = load_arguments(**kwargs)
     args = parser.parse_args()
     
+    dtPTF 
+    
     #Liste des colonnes à récupérer dans le fichier du dernier portefeuille
     list_col = []
     
     #Lecture des données
-    dfPtfReel = pd.read_csv(args.ptf_reel,header=[0], sep=';')
-    dfPtfTh = pd.read_csv(args.ptf_th, header=0, sep=';')
+    dfPtfReel = pd.read_csv(args.ptf_reel,header=[0], sep=';', parse_date=['DATE_PRTF'])
+    dfPtfTh = pd.read_csv(args.ptf_th, header=0, sep=';', parse_date=['DATE_PRTF'])
     
-    
+    dfPtfReel = dfPtfReel[(dfPtfReel['DATE'] = DateMax)]
     
     
     

@@ -88,7 +88,7 @@ class Selection:
             csvRmkswriter.writerow(['DATE_CALC', 'TICKER','REMARQUE'])
         
         fstPrtf = True
-        dfPrtf = pd.DataFrame(columns=['TICKER','SEMI_VAR','POIDS','DATE_PRTF']).set_index('TICKER')
+        dfPrtf = pd.DataFrame(columns=['TICKER','SEMI_VAR','POIDS','COURS','DATE_PRTF']).set_index('TICKER')
         
         #Lecture des données
         dfUniv = pd.read_csv(args.fichier_univers,header=[0], sep=';', index_col=0, parse_dates=True)

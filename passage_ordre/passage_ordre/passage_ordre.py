@@ -2,6 +2,7 @@ import argparse
 import pandas as pd
 import numpy as np
 import os
+from datetime import datetime
 
 # https://docs.scipy.org/doc/scipy/reference/optimize.html
 # https://docs.scipy.org/doc/scipy/reference/tutorial/optimize.html
@@ -20,13 +21,15 @@ class readable_dir(argparse.Action):
 def load_arguments(**kwargs):
     parser = argparse.ArgumentParser()
     parser.add_argument("-pr","--ptf_reel", help="Chemin vers le fichier contenant le dernier portefeuille",
-                        type=str, default='./data/ptfs réels.csv')
+                        type=str, default='../../selection/selection/data/ptfs réels.csv')
     parser.add_argument("-pt","--ptf_th", help="Chemin vers le fichier contenant le portefeuille théorique",
-                        type=str, default='./output/ptfs.csv')
-    parser.add_argument("-ic","--inst_const", help="Chemin vers le fichier contenant la liste des instruments avec leur contraintes en colonne",
-                        type=str, default='./output/contraintes.csv')
-    parser.add_argument("-dt","--date", help="Date du portefeuille (utile pour récupérer les prtfs dans les fichiers)",
-                        type=str, default='./output/ptfs.csv')
+                        type=str, default='../../selection/selection/output/ptfs.csv')
+    #parser.add_argument("-ic","--inst_const", help="Chemin vers le fichier contenant la liste des instruments avec leur contraintes en colonne",
+                        #type=str, default='./output/contraintes.csv')
+    parser.add_argument("-dtn","--date_new", help="Date du portefeuille cible",
+                        type=str, default='01/01/2020')
+    parser.add_argument("-dto","--date_old", help="Date du dernier portefeuille réel",
+                        type=str, default='01/12/2019')
 
     for key, value in kwargs.items():
         for action in parser._actions:
@@ -41,16 +44,22 @@ def GetOrders(**kwargs):
     parser = load_arguments(**kwargs)
     args = parser.parse_args()
     
-    dtPTF 
+    dtPTF_cible = datetime.strptime(args.date_new,"%d/%m/%Y")
+    dtPTF_old = datetime.strptime(args.date_old,"%d/%m/%Y")
     
     #Liste des colonnes à récupérer dans le fichier du dernier portefeuille
-    list_col = []
+    list_col = ['TICKER','POIDS','COURS']
     
     #Lecture des données
-    dfPtfReel = pd.read_csv(args.ptf_reel,header=[0], sep=';', parse_date=['DATE_PRTF'])
-    dfPtfTh = pd.read_csv(args.ptf_th, header=0, sep=';', parse_date=['DATE_PRTF'])
+    dfPtfReel = pd.read_csv(args.ptf_reel,header=[0], sep=';', parse_dates=['DATE_PRTF'])
+    dfPtfCible = pd.read_csv(args.ptf_th, header=0, sep=';', parse_dates=['DATE_PRTF'])
     
-    dfPtfReel = dfPtfReel[(dfPtfReel['DATE'] = DateMax)]
+    dfPtfReel = dfPtfReel[(dfPtfReel['DATE_PRTF'] == dtPTF_old)]
+    dfPtfCible = dfPtfReel[(dfPtfReel['DATE_PRTF'] == dtPTF_cible)]
     
+    print(dfPtfReel)
+    
+if __name__ == '__main__':
+    GetOrders()
     
     

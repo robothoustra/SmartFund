@@ -3,12 +3,12 @@
 import argparse
 import pandas as pd
 import numpy as np
-import dateCalc
+import date_calc
 import utils
-import Model_Calcs
+import model_calcs
 import csv
 import time
-import PlotPrtf
+import plot_prtf
 import os
 
 class readable_dir(argparse.Action):
@@ -26,8 +26,8 @@ def load_arguments(**kwargs):
     parser.add_argument("-pu","--fichier_univers", help="Chemin vers le fichier des historiques de l'univers", type=str, default='./data/Histo_Univers.csv')
     parser.add_argument("-pc","--fichier_cours", help="Chemin vers le fichier des historiques de cours", type=str, default='./data/Histo_Cours.csv')
     parser.add_argument("-pb", "--fichier_bench", help="Chemin vers le fichier de l'historiqe du benchmark", type=str, default='./data/Histo_Bench.csv')
-    parser.add_argument("-dd", "--date_debut", help="Date de début des calculs", type=str, default='01/01/2019')
-    parser.add_argument("-df", "--date_fin", help="Date de fin des calculs", type=str, default='01/04/2019')
+    parser.add_argument("-dd", "--date_debut", help="Date de début des calculs", type=str, default='01/12/2019')
+    parser.add_argument("-df", "--date_fin", help="Date de fin des calculs", type=str, default='01/01/2020')
     parser.add_argument("-tper", "--type_periode_calc", help="Type de période pour les calculs", type=str, choices=['days','months','years'], default='months')
     parser.add_argument("-per", "--periodicite", help="Nombre de pédiodes pour chaque calcul de portefeuille", type=int, default=6)
     parser.add_argument("-tp", "--type_pas", help="type de pas entre chaque portefeuille", type=str, choices=['days','months','years'], default='months')
@@ -81,14 +81,14 @@ class Selection:
         csvRmks = None
         csvRmkswriter = None
         
-        if not args.write_rmks==True:
+        if args.write_rmks==True:
             strRmk = os.path.join(args.path_output.strip(), 'csvRmks.csv')
             csvRmks = open(strRmk,'w', newline='')
             csvRmkswriter = csv.writer(csvRmks, delimiter=';')
             csvRmkswriter.writerow(['DATE_CALC', 'TICKER','REMARQUE'])
         
         fstPrtf = True
-        dfPrtf = pd.DataFrame(columns=['TICKER','SEMI_VAR','POIDS','DATE_PRTF']).set_index('TICKER')
+        dfPrtf = pd.DataFrame(columns=['TICKER','SEMI_VAR','POIDS','COURS','DATE_PRTF']).set_index('TICKER')
         
         #Lecture des données
         dfUniv = pd.read_csv(args.fichier_univers,header=[0], sep=';', index_col=0, parse_dates=True)
@@ -101,7 +101,7 @@ class Selection:
         dfBench = utils.CleanAndSortDF(dfBench,sortIndex=True, supRowNaIndex=True,supColNaIndex=True)
         
         #Initialise l'objet "dates" avec la classe SetDates
-        dates = dateCalc.SetDates(args.date_debut, args.date_fin, args.type_pas, args.nb_pas, type_periode=args.type_periode_calc, periodicite=args.periodicite)
+        dates = date_calc.SetDates(args.date_debut, args.date_fin, args.type_pas, args.nb_pas, type_periode=args.type_periode_calc, periodicite=args.periodicite)
         
         seuilNA = (1-args.prct_na)
         dfLastPrtf= pd.DataFrame()
@@ -123,10 +123,10 @@ class Selection:
             perCours = utils.ApplyDataConstraint(perCours,seuilNA,dates.dateInterCalc(),csvRmkswriter)
     
             #Récupère la matrice de données nécessaire à la selection
-            dfData = Model_Calcs.GetData(perCours, perBench)
+            dfData = model_calcs.GetData(perCours, perBench)
     
             #Sélectionne les valeurs du portefeuille de la période
-            dfLastPrtf = Model_Calcs.GetNextPrtf(dfLastPrtf,args.nb_titres,args.nb_titres_turnover, dfData,csvRmkswriter,dates.dateInterCalc())
+            dfLastPrtf = model_calcs.GetNextPrtf(dfLastPrtf,args.nb_titres,args.nb_titres_turnover, dfData,csvRmkswriter,dates.dateInterCalc())
             
             #Ajoute la colonne contenant la date du portefeuille
             dfLastPrtf.insert(len(dfLastPrtf.columns),'DATE_PRTF',dates.dateInterCalc())
@@ -140,11 +140,14 @@ class Selection:
         #Écrit les résultats dans un csv
         if args.write_prtf:
             if fstPrtf:
-                dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='w',header=True, sep=';', float_format='%.15f')
+                dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='w',header=True, sep=';') #, float_format='%.15f')
                 fstPrtf=False
             else:
-                dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='a',header=False, sep=';', float_format='%.15f')
+                dfPrtf.to_csv(args.path_output + strCsvPrtf, mode='a',header=False, sep=';') #, float_format='%.15f')
         
+        if args.write_rmks == True:
+            csvRmks.close()
+            
         return dfPrtf
 
 if __name__ == '__main__':

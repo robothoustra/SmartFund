@@ -30,18 +30,22 @@ def GetData(perCours, perBench):
         # Tester aussi en prenant la perf relative par rapport au bench : varBench.iloc[cpt - 1][0] - perf
         dfTemp = pd.concat([varCours[i],varBench],axis=1)
         dfTemp = dfTemp[(dfTemp[dfTemp.columns[0]]-dfTemp[dfTemp.columns[1]]<0) & (dfTemp[dfTemp.columns[1]]<0)]
-        semivar_list.append(var(dfTemp[dfTemp.columns[0]]))
+        semivar_list.append(round(var(dfTemp[dfTemp.columns[0]]),12))
 
     #Mise sous forme de série
     dfData = pd.DataFrame(semivar_list,intitules)
 
     #Ajout des intitulés de colonne
     dfData.index.names = ['TICKER']
-    dfData.columns = ['SEMI_VAR']
+    
+    #Ajout de la colonne des derniers cours
+    dfLastCours = perCours[(perCours.index == perCours.index.max())].unstack()
+    dfLastCours = dfLastCours.reset_index().drop(labels='level_1', axis=1).set_index('TICKER')
+    dfData = pd.concat([dfData,dfLastCours],axis=1)
+    
+    dfData.columns = ['SEMI_VAR','COURS']
     
     return dfData
-
-
 
 def GetNextPrtf(dfLastPrtf,nb_titres, nb_titres_turnover,dfData,csvRmkswriter,dtCalc, *args, **kwargs):
     

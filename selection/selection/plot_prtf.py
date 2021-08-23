@@ -75,7 +75,7 @@ def Calc_Perf(**kwargs):
     lBench = []
     
     for dtCalc in vDates:
-        #Ensemble des dates de portefeuilles inférieures ou égales à la date de calulc
+        #Ensemble des dates de portefeuilles inférieures ou égales à la date de calcul
         dtList = [x for x in dtPrtfs if x <= dtCalc]
         
         #S'il existe des dates de portefeuilles inférieurs ou égale à celle de la date de calcul
